@@ -26,7 +26,7 @@ const client = new MongoClient(uri, {
 });
 
 const jobsCollection = client.db('JobsDB').collection('jobs');
-
+const applyJobsCollection = client.db('JobsDB').collection('apply');
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
@@ -54,6 +54,13 @@ async function run() {
     res.send(result)
   })
 
+  //new data save
+  app.post('/apply',async(req,res) =>{
+    const apply =req.body;
+    console.log(apply);
+    const result = await applyJobsCollection.insertOne(apply);
+    res.send(result)
+  })
   
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
