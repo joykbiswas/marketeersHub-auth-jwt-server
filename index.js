@@ -42,11 +42,33 @@ async function run() {
 
     // read data
     app.get('/jobs', async(req,res) =>{
-      const cursor= jobsCollection.find()
-      const result = await cursor.toArray()
+      console.log(req.query.email);
+      let query = {}
+      if(req.query.email){
+        query = {email: req.query.email}
+      }
+      // const cursor= 
+      const result = await jobsCollection.find(query).toArray()
       res.send(result)
   })
 
+  // update 
+  app.put('/jobs/:id', async(req,res) =>{
+    const id = req.params.id;
+    const filter = {_id: new ObjectId(id)}
+    const options = {upsert: true};
+    const updatedJob = req.body;
+
+    const job ={
+      $set:{
+
+      }
+    }
+    const result = await jobsCollection.updateOne(filter, job, options)
+    res.send(result)
+  })
+
+  // fide job & apply 
   app.get('/jobs/:id', async(req,res) =>{
     const id = req.params.id;
     const query = {_id: new ObjectId(id)}
@@ -59,6 +81,18 @@ async function run() {
     const apply =req.body;
     console.log(apply);
     const result = await applyJobsCollection.insertOne(apply);
+    res.send(result)
+  })
+
+  // apply data loaded
+  app.get('/apply', async(req,res) =>{
+    // console.log(req.query.email);
+    let query = {}
+    if(req.query?.email){
+      query = {email: req.query?.email}
+    }
+    // console.log(query);
+    const result = await applyJobsCollection.find(query).toArray();
     res.send(result)
   })
   
