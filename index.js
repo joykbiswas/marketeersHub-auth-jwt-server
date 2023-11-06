@@ -61,12 +61,56 @@ async function run() {
 
     const job ={
       $set:{
-
+        email: updatedJob.email,
+        category: updatedJob.category,
+        jobTitle: updatedJob.jobTitle,
+        deadline: updatedJob.deadline,
+        maximumPrice: updatedJob.maximumPrice,
+        minimumPrice: updatedJob.minimumPrice,
+        description: updatedJob.description,
       }
     }
     const result = await jobsCollection.updateOne(filter, job, options)
     res.send(result)
   })
+
+  app.patch('/apply/:id', async(req,res) =>{
+    const id =req.params.id;
+    const filter = {_id: new ObjectId(id)};
+    const updateJob = req.body;
+    const updateDoc = {
+      $set: {
+        status: updateJob.status
+      }
+    }
+    const result =await applyJobsCollection.updateOne(filter, updateDoc)
+    res.send(result)
+  })
+
+  // apply data loaded
+  app.get('/apply', async(req,res) =>{
+    // console.log(req.query.email);
+    let query = {}
+    if(req.query?.email){
+      query = {userEmail: req.query?.email}
+    }
+    // console.log(query);
+    const result = await applyJobsCollection.find(query).toArray();
+    res.send(result)
+  })
+
+
+
+  // delete
+  app.delete('/jobs/:id', async(req, res) =>{
+    const id = req.params.id;
+    const query ={_id: new ObjectId(id)}
+    const result =await jobsCollection.deleteOne(query);
+    res.send(result) 
+  })
+
+
+
 
   // fide job & apply 
   app.get('/jobs/:id', async(req,res) =>{
@@ -84,17 +128,8 @@ async function run() {
     res.send(result)
   })
 
-  // apply data loaded
-  app.get('/apply', async(req,res) =>{
-    // console.log(req.query.email);
-    let query = {}
-    if(req.query?.email){
-      query = {email: req.query?.email}
-    }
-    // console.log(query);
-    const result = await applyJobsCollection.find(query).toArray();
-    res.send(result)
-  })
+  
+
   
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
