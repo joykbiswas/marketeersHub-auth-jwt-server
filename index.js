@@ -133,7 +133,7 @@ const applyJobsCollection = client.db('JobsDB').collection('apply');
   //new data save
   app.post('/apply',async(req,res) =>{
     const apply =req.body;
-    console.log(apply);
+    // console.log(apply);
     const result = await applyJobsCollection.insertOne(apply);
     res.send(result)
   })
@@ -162,7 +162,7 @@ const applyJobsCollection = client.db('JobsDB').collection('apply');
     if(req.query?.email){
       query = {userEmail: req.query?.email}
     }
-    // console.log(query);
+    console.log(query);
     const result = await applyJobsCollection.find(query).toArray();
     res.send(result)
   })
@@ -175,7 +175,7 @@ const applyJobsCollection = client.db('JobsDB').collection('apply');
     if(req.query?.email){
       query = {email: req.query?.email}
     }
-    // console.log(query);
+    console.log(query);
     const result = await applyJobsCollection.find(query).toArray();
     res.send(result)
   })
@@ -199,11 +199,6 @@ const applyJobsCollection = client.db('JobsDB').collection('apply');
     const result = await jobsCollection.findOne(query);
     res.send(result)
   })
-
-  
-
-  
-
   
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
@@ -224,9 +219,3 @@ app.get('/', (req,res) =>{
 app.listen(port, () =>{
     console.log(`marketeersHub server is running on port: ${port}`);
 })
-
-
-
-//
-// throw new BSONError('input must be a 24 character hex string, 12 byte Uint8Array, or an integer');
-// ^
