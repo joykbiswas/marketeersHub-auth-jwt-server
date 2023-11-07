@@ -40,9 +40,21 @@ const logger = (req, res,next) =>{
   next()
 }
 
-// const verifyToken = (req, res, next) =>{
-
-// }
+const verifyToken = (req, res, next) =>{
+  const token = req?.cookies?.token;
+  // console.log('token in the middleWare', token);
+  if(!token){
+    return res.status(401).send({message: 'unauthorized access'})
+  }
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) =>{
+    if(err){
+      return res.status(401).send({message: 'unauthorized access'})
+    }
+    req.user = decoded;
+    next();
+  })
+ 
+}
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
@@ -118,6 +130,14 @@ const applyJobsCollection = client.db('JobsDB').collection('apply');
     res.send(result)
   })
 
+  //new data save
+  app.post('/apply',async(req,res) =>{
+    const apply =req.body;
+    console.log(apply);
+    const result = await applyJobsCollection.insertOne(apply);
+    res.send(result)
+  })
+
   app.patch('/apply/:id', async(req,res) =>{
     const id =req.params.id;
     const filter = {_id: new ObjectId(id)};
@@ -132,9 +152,12 @@ const applyJobsCollection = client.db('JobsDB').collection('apply');
   })
 
   // apply data loaded for user
-  app.get('/apply',logger, async(req,res) =>{
-    console.log("cook cookie",req.cookies);
+  app.get('/apply',logger, verifyToken, async(req,res) =>{
+    console.log("token owner info",req.user);
     // console.log(req.query.email);
+    if(req.user.email !== req.query.email){
+      return res.status(403).send({message: 'forbidden access'})
+    }
     let query = {}
     if(req.query?.email){
       query = {userEmail: req.query?.email}
@@ -146,7 +169,7 @@ const applyJobsCollection = client.db('JobsDB').collection('apply');
 
   
   // apply data loaded for buyer
-  app.get('/apply',logger, async(req,res) =>{
+  app.get('/apply',logger, verifyToken, async(req,res) =>{
     // console.log(req.query.email);
     let query = {}
     if(req.query?.email){
@@ -177,13 +200,7 @@ const applyJobsCollection = client.db('JobsDB').collection('apply');
     res.send(result)
   })
 
-  //new data save
-  app.post('/apply',async(req,res) =>{
-    const apply =req.body;
-    console.log(apply);
-    const result = await applyJobsCollection.insertOne(apply);
-    res.send(result)
-  })
+  
 
   
 
