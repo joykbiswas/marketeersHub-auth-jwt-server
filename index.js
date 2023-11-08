@@ -13,7 +13,10 @@ const port = process.env.PORT || 5000;
 // MIDDLEWARE
 app.use(cors({
   origin:[
-    'http://localhost:5173'
+    // 'http://localhost:5173',
+    'https://marketeershub-af5e4.web.app',
+    'https://marketeershub-af5e4.firebaseapp.com'
+
   ],
   credentials: true
 }));
@@ -22,7 +25,6 @@ app.use(cookieParser());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.cqpfzla.mongodb.net/?retryWrites=true&w=majority`;
 
-// const uri = "mongodb+srv://<digitalMarket>:<aM2uxaKmpQ2fpYBW>@cluster0.cqpfzla.mongodb.net/?retryWrites=true&w=majority";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
