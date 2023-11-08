@@ -13,9 +13,9 @@ const port = process.env.PORT || 5000;
 // MIDDLEWARE
 app.use(cors({
   origin:[
-    'http://localhost:5173',
-    // 'https://marketeershub-af5e4.web.app',
-    // 'https://marketeershub-af5e4.firebaseapp.com'
+    // 'http://localhost:5173',
+    'https://marketeershub-af5e4.web.app',
+    'https://marketeershub-af5e4.firebaseapp.com'
 
   ],
   credentials: true
