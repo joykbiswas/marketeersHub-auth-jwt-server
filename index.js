@@ -13,9 +13,9 @@ const port = process.env.PORT || 5000;
 // MIDDLEWARE
 app.use(cors({
   origin:[
-    // 'http://localhost:5173',
-    'https://marketeershub-af5e4.web.app',
-    'https://marketeershub-af5e4.firebaseapp.com'
+    'http://localhost:5173',
+    // 'https://marketeershub-af5e4.web.app',
+    // 'https://marketeershub-af5e4.firebaseapp.com'
 
   ],
   credentials: true
@@ -182,7 +182,7 @@ const applyJobsCollection = client.db('JobsDB').collection('apply');
   // })
 
 
-  app.get('/apply',logger, verifyToken, async(req,res) =>{
+  app.get('/apply_byer',logger, verifyToken, async(req,res) =>{
     
     if(req.user.email !== req.query.email){
       return res.status(403).send({message: 'forbidden access'})
@@ -235,3 +235,7 @@ app.get('/', (req,res) =>{
 app.listen(port, () =>{
     console.log(`marketeersHub server is running on port: ${port}`);
 })
+
+
+//vercel
+// https://marketeers-hub-auth-jwt-server.vercel.app
