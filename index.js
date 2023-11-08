@@ -67,7 +67,7 @@ const applyJobsCollection = client.db('JobsDB').collection('apply');
   //auth related api
   app.post('/jwt',logger, async(req, res) =>{
     const user = req.body
-    console.log('user for token', user);
+    // console.log('user for token', user);
     const token =jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,{
       expiresIn:'1h'})
       res.cookie('token',token, {
@@ -91,14 +91,14 @@ const applyJobsCollection = client.db('JobsDB').collection('apply');
     // create
     app.post('/Jobs', async(req, res) =>{
       const newJobs=req.body;
-      console.log(newJobs);
+      // console.log(newJobs);
       const result = await jobsCollection.insertOne(newJobs)
       res.send(result);
     })
 
     // read data
     app.get('/jobs', async(req,res) =>{
-      console.log(req.query.email);
+      // console.log(req.query.email);
       let query = {}
       if(req.query.email){
         query = {email: req.query.email}
@@ -153,8 +153,7 @@ const applyJobsCollection = client.db('JobsDB').collection('apply');
 
   // apply data loaded for user
   app.get('/apply',logger, verifyToken, async(req,res) =>{
-    console.log("token owner info",req.user);
-    // console.log(req.query.email);
+    
     if(req.user.email !== req.query.email){
       return res.status(403).send({message: 'forbidden access'})
     }
@@ -162,20 +161,35 @@ const applyJobsCollection = client.db('JobsDB').collection('apply');
     if(req.query?.email){
       query = {userEmail: req.query?.email}
     }
-    console.log(query);
+    console.log('query user',query);
     const result = await applyJobsCollection.find(query).toArray();
     res.send(result)
   })
 
   
   // apply data loaded for buyer
+  // app.get('/apply',logger, verifyToken, async(req,res) =>{
+  //   // console.log(req.query.email);
+  //   let query = {}
+  //   if(req.query?.email){
+  //     query = {email: req.query?.email}
+  //   }
+  //   console.log('userEmail', query);
+  //   const result = await applyJobsCollection.find(query).toArray();
+  //   res.send(result)
+  // })
+
+
   app.get('/apply',logger, verifyToken, async(req,res) =>{
-    // console.log(req.query.email);
+    
+    if(req.user.email !== req.query.email){
+      return res.status(403).send({message: 'forbidden access'})
+    }
     let query = {}
     if(req.query?.email){
       query = {email: req.query?.email}
     }
-    console.log(query);
+    // console.log(query);
     const result = await applyJobsCollection.find(query).toArray();
     res.send(result)
   })
