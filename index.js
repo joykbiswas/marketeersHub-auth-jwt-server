@@ -140,19 +140,7 @@ const applyJobsCollection = client.db('JobsDB').collection('apply');
     res.send(result)
   })
 
-  app.patch('/apply/:id', async(req,res) =>{
-    const id =req.params.id;
-    const filter = {_id: new ObjectId(id)};
-    const updateJob = req.body;
-    const updateDoc = {
-      $set: {
-        status: updateJob.status
-      }
-    }
-    const result =await applyJobsCollection.updateOne(filter, updateDoc)
-    res.send(result)
-  })
-
+ 
   // apply data loaded for user
   app.get('/apply',logger, verifyToken, async(req,res) =>{
     
@@ -169,20 +157,10 @@ const applyJobsCollection = client.db('JobsDB').collection('apply');
   })
 
   
-  // apply data loaded for buyer
-  // app.get('/apply',logger, verifyToken, async(req,res) =>{
-  //   // console.log(req.query.email);
-  //   let query = {}
-  //   if(req.query?.email){
-  //     query = {email: req.query?.email}
-  //   }
-  //   console.log('userEmail', query);
-  //   const result = await applyJobsCollection.find(query).toArray();
-  //   res.send(result)
-  // })
 
 
-  app.get('/apply_byer',logger, verifyToken, async(req,res) =>{
+  // buyer side(bid request)
+  app.get('/apply_buyer',logger, verifyToken, async(req,res) =>{
     
     if(req.user.email !== req.query.email){
       return res.status(403).send({message: 'forbidden access'})
@@ -193,6 +171,19 @@ const applyJobsCollection = client.db('JobsDB').collection('apply');
     }
     // console.log(query);
     const result = await applyJobsCollection.find(query).toArray();
+    res.send(result)
+  })
+
+  app.patch('/apply_buyer/:id', async(req,res) =>{
+    const id =req.params.id;
+    const filter = {_id: new ObjectId(id)};
+    const updateJob = req.body;
+    const updateDoc = {
+      $set: {
+        status: updateJob.status
+      }
+    }
+    const result =await applyJobsCollection.updateOne(filter, updateDoc)
     res.send(result)
   })
 
