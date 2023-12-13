@@ -15,8 +15,7 @@ app.use(cors({
   origin:[
     'http://localhost:5173',
     'https://joyportfolip.surge.sh',
-    // 'https://marketeershub-af5e4.web.app',
-    // 'https://marketeershub-af5e4.firebaseapp.com'
+    
 
   ],
   credentials: true
